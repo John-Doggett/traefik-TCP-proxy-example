@@ -1,0 +1,56 @@
+http:
+  routers:
+    mysite1-http:
+      entryPoints:
+        - http
+      rule: "Host(`mysite1.com`)"
+      service: mysite1-http-service
+
+    catchall-http:
+      entryPoints:
+        - http
+      rule: "PathPrefix(`/`)"
+      service: default-http-service
+
+  services:
+    mysite1-http-service:
+      loadBalancer:
+        servers:
+          - url: "http://10.0.0.1:80"
+    default-http-service:
+      loadBalancer:
+        servers:
+          - url: "http://10.0.0.2:80"
+
+tcp:
+  routers:
+    mysite1-https:
+      entryPoints:
+        - tcp
+      rule: "HostSNI(`mysite1.com`)"
+      service: mysite1-https-service
+      tls:
+        passthrough: true
+
+    catchall-https:
+      entryPoints:
+        - tcp
+      rule: "HostSNI(`*`)"
+      service: default-https-service
+      tls:
+        passthrough: true
+
+  services:
+    mysite1-https-service:
+      loadBalancer:
+        servers:
+          - address: 10.0.0.1:443
+        proxyProtocol:
+          version: 2
+
+    default-https-service:
+      loadBalancer:
+        servers:
+          - address: 10.0.0.2:443
+        proxyProtocol:
+          version: 2
