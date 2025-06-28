@@ -1,0 +1,22 @@
+entryPoints:
+  http:
+    address: ":80"
+  tcp:
+    address: ":443"
+    transport:
+      lifeCycle:
+        requestAcceptGraceTimeout: 0s
+        graceTimeOut: 10s
+      respondingTimeouts:
+        idleTimeout: 3m
+
+providers:
+  file:
+    directory: /etc/traefik/dynamic/
+    watch: true
+api:
+  dashboard: false
+  insecure: false
+log:
+  level: INFO
+  filePath: "/var/log/traefik/traefik.log"
