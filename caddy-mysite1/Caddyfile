@@ -1,0 +1,33 @@
+{
+        servers :443 {
+                listener_wrappers {
+                        proxy_protocol {
+                                timeout 2s
+                                allow 10.0.0.0/24
+                        }       
+                        tls
+                }
+        }
+
+        servers :80 {
+                listener_wrappers {
+                        proxy_protocol {
+                                timeout 2s
+                                allow 10.0.0.0/24
+                        }       
+                }
+        }
+        log {
+                level INFO
+                output file /var/log/caddy/info.log
+        }
+}
+
+mysite1.com {
+        root * /srv/mysite1.com
+        file_server
+}
+
+http://, https:// {
+        redir https://mysite1.com
+}
