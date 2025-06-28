@@ -1,0 +1,31 @@
+{
+        servers :443 {
+                listener_wrappers {
+                        proxy_protocol {
+                                timeout 2s
+                                allow 10.0.0.0/24
+                        }
+                        tls
+                }
+        }
+
+        servers :80 {
+                listener_wrappers {
+                        proxy_protocol {
+                                timeout 2s
+                                allow 10.0.0.0/24
+                        }
+                }
+        }
+        log {
+                level INFO
+                output file /var/log/caddy/info.log
+        }
+}
+randomsite.com {
+        root * /srv/randomsite.com
+        file_server
+}
+http://, https:// {
+        respond "404 Not Found" 404
+}
